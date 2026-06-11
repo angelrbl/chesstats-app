@@ -15,7 +15,7 @@ user = "TensiKReyDama"
 
 for cg in chess_games:
     print(f"{cg.white} vs. {cg.black}:  {cg.result}")
-    if (cg.get_uwinner() == user):
+    if (cg.get_winner() == user):
         print(user + " won.")
         wins += 1
     else:

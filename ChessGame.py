@@ -19,7 +19,7 @@ class ChessGame:
             return 'draw'
         return None
     
-    def get_uwinner(self):  # user winner
+    def get_winner(self):  # user winner
         winner = self.get_cwinner()
         if winner == "white":
             return self.white
