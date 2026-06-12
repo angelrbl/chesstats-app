@@ -5,7 +5,7 @@ class ChessGame:
     def __init__(self, cg):
         self.game = cg
         self.hd = cg.headers
-        self.board = cg.board
+        self.board = cg.board()
         self.white = cg.headers.get("White")
         self.black = cg.headers.get("Black")
         self.result =cg.headers.get('Result')
@@ -34,6 +34,21 @@ class ChessGame:
         elif user == self.black:
             return False
         else:
-            return None
-        
+            raise Exception("The user given did not play this game")
+
+    def get_first_move(self):
+        moves = iter(self.game.mainline_moves())
+        first_move = next(moves)
+        return self.board.san(first_move)
+
+    def get_first_move_user(self, user):
+        moves = iter(self.game.mainline_moves())
+        white_move = next(moves)
+        if self.is_white(user):
+            first_move = white_move
+        else:
+            self.board.push(white_move)
+            first_move = next(moves)
+        return self.board.san(first_move)
+    
     
