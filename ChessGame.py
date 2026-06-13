@@ -45,7 +45,7 @@ class ChessGame:
     def get_first_move(self):
         moves = iter(self.game.mainline_moves())
         first_move = next(moves)
-        return self.board.san(first_move)
+        return first_move
 
     def get_first_move_user(self, user):
         moves = iter(self.game.mainline_moves())
@@ -55,6 +55,12 @@ class ChessGame:
         else:
             self.board.push(white_move)
             first_move = next(moves)
-        return self.board.san(first_move)
+        return first_move
     
+    def get_first_move_san(self):
+        move = self.get_first_move()
+        return self.board.san(move)
     
+    def get_first_move_user_san(self, user):
+        move = self.get_first_move_user(user)
+        return self.board.san(move)
