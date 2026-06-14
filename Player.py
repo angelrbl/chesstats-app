@@ -62,6 +62,15 @@ class Player:
                     first_moves[1].update({first_move: 1})
         return first_moves
 
+    def get_first_moves_matrix(self):
+        first_moves = [[0]*8 for _ in range(8)]
+        for game in self.games:
+            first_move = self.get_first_move(game, notation=0)
+            go_square = first_move.to_square
+            f = chess.square_rank(go_square)
+            c = chess.square_file(go_square)
+            first_moves[f][c] += 1
+        return first_moves 
 
     def won(self, game):
         if game.get_winner() == self.username:
