@@ -21,7 +21,9 @@ class Player:
         return chess_games
     
     def get_winning_rate(self):
-        return f"{(self.get_win_count() / self.GAME_NUM) * 100:.2f} %"
+        if self.GAME_NUM == 0:
+            return 0
+        return f"{(self.get_win_count() / self.GAME_NUM) * 100:.1f} %"
 
     def get_first_move(self, game, notation):
         board = game.get_board()
