@@ -23,7 +23,7 @@ class Player:
     def get_winning_rate(self):
         if self.GAME_NUM == 0:
             return 0
-        return f"{(self.get_win_count() / self.GAME_NUM) * 100:.1f} %"
+        return f"{(self.get_win_count(color="") / self.GAME_NUM) * 100:.1f} %"
 
     def get_first_move(self, game, notation):
         board = game.get_board()
@@ -86,20 +86,53 @@ class Player:
         else:
             return False
 
-    def get_win_count(self):
-        wins = 0
+    def get_win_count(self, color):
+        white_wins = 0
+        black_wins = 0
         for game in self.games:
             if self.won(game):
-                wins += 1
-        return wins
+                if self.is_white(game):
+                    white_wins += 1
+                else:
+                    black_wins += 1
+        if color == "white":
+            return white_wins
+        elif color == "black":
+            return black_wins
+        else:
+            return white_wins + black_wins
     
-    def get_draw_count(self):
-        draws = 0
+    def get_draw_count(self, color):
+        white_draws = 0
+        black_draws = 0
         for game in self.games:
             if self.drew(game):
-                draws += 1 
-        return draws
-
+                if self.is_white(game):
+                    white_draws += 1
+                else:
+                    black_draws += 1
+        if color == "white":
+            return white_draws
+        elif color == "black":
+            return black_draws
+        else:
+            return white_draws + black_draws
+        
+    def get_loss_count(self, color):
+        white_losses = 0
+        black_losses = 0
+        for game in self.games:
+            if self.lost(game):
+                if self.is_white(game):
+                    white_losses += 1
+                else:
+                    black_losses += 1
+        if color == "white":
+            return white_losses
+        elif color == "black":
+            return black_losses
+        else:
+            return white_losses + black_losses
 
     def won(self, game):
         if game.get_winner() == self.username:
