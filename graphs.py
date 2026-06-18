@@ -6,7 +6,7 @@ import general as general
 from matplotlib.ticker import MaxNLocator
 
 def first_moves_heatmap(player, selection):
-    matriz_np = np.array(player.get_first_moves_matrix() if selection is "Player" else general.get_first_moves_matrix(general.games))
+    matriz_np = np.array(player.get_first_moves_matrix() if selection == "Player" else general.get_first_moves_matrix(general.games))
     matriz_np = np.flipud(matriz_np)
 
     cols = ["a", "b", "c", "d", "e", "f", "g", "h"]
@@ -65,7 +65,7 @@ def first_move_graph(player, selection):
             "Move": list(first_move_dict[1].keys()),
             "Times": list(first_move_dict[1].values())
         }
-        games_num = len(list(first_move_dict[0].keys()))
+        games_num = len(first_move_dict[0]) + len(first_move_dict[1])
     else:
         first_move_dict = general.get_first_moves(general.games)
         if not first_move_dict:
@@ -91,6 +91,135 @@ def first_move_graph(player, selection):
     fig.patch.set_alpha(0.0)
     return fig
 
+
+def opening_stats_graph(player, selection):
+    if selection == "Player":
+        opening_stats = player.get_opening_stats()
+        if not opening_stats:
+            raise Exception("Not enough data to show")
+        #WHITE
+        white_moves = []
+        white_results = []
+        white_percentages = []
+        for move, data in opening_stats[0].items():
+            total = data["win"] + data["draw"] + data["loss"]
+            if total > 0:
+                #WIN
+                if data["win"] > 0:
+                    white_moves.append(move)
+                    white_results.append("Win")
+                    white_percentages.append((data["win"]/total) * 100)
+                #DRAW
+                if data["draw"] > 0:
+                    white_moves.append(move)
+                    white_results.append("Draw")
+                    white_percentages.append((data["draw"]/total) * 100)
+                #LOSS
+                if data["loss"] > 0:
+                    white_moves.append(move)
+                    white_results.append("Loss")
+                    white_percentages.append((data["loss"]/total) * 100)
+        
+        if not white_moves:
+            raise Exception("No moves with total games > 0 found")
+
+        white_data = {
+            "Move": white_moves,
+            "Result": white_results,
+            "Percentage": white_percentages
+        }
+
+        #BLACK
+        black_moves = []
+        black_results = []
+        black_percentages = []
+        for move, data in opening_stats[1].items():
+            total = data["win"] + data["draw"] + data["loss"]
+            if total > 0:
+                #WIN
+                if data["win"] > 0:
+                    black_moves.append(move)
+                    black_results.append("Win")
+                    black_percentages.append((data["win"]/total) * 100)
+                #DRAW
+                if data["draw"] > 0:
+                    black_moves.append(move)
+                    black_results.append("Draw")
+                    black_percentages.append((data["draw"]/total) * 100)
+                #LOSS
+                if data["loss"] > 0:
+                    black_moves.append(move)
+                    black_results.append("Loss")
+                    black_percentages.append((data["loss"]/total) * 100)
+        
+        if not black_moves:
+            raise Exception("No moves with total games > 0 found")
+
+        black_data = {
+            "Move": black_moves,
+            "Result": black_results,
+            "Percentage": black_percentages
+        }
+
+        games_num = len(opening_stats[0]) + len(opening_stats[1])
+    else:
+        opening_stats = general.get_opening_stats(general.games)
+        if not opening_stats:
+            raise Exception("Not enough data to show")
+        #WHITE
+        white_moves = []
+        white_results = []
+        white_percentages = []
+        for move, data in opening_stats.items():
+            total = data["win"] + data["draw"] + data["loss"]
+            if total > 0:
+                #WIN
+                if data["win"] > 0:
+                    white_moves.append(move)
+                    white_results.append("Win")
+                    white_percentages.append((data["win"]/total) * 100)
+                #DRAW
+                if data["draw"] > 0:
+                    white_moves.append(move)
+                    white_results.append("Draw")
+                    white_percentages.append((data["draw"]/total) * 100)
+                #LOSS
+                if data["loss"] > 0:
+                    white_moves.append(move)
+                    white_results.append("Loss")
+                    white_percentages.append((data["loss"]/total) * 100)
+        
+        if not white_moves:
+            raise Exception("No moves with total games > 0 found")
+
+        white_data = {
+            "Move": white_moves,
+            "Result": white_results,
+            "Percentage": white_percentages
+        }
+        games_num = len(opening_stats)
+
+    white_palette = {"Win": "#f7f7f7", "Draw": "#c4c4c4", "Loss": "#b3b3b3"}
+    black_palette = {"Win": "#333333", "Draw": "#242424", "Loss": "#1a1a1a"}
+        
+        
+    fig, ax = plt.subplots(figsize=(8, max(3, games_num * 0.5)))
+    sns.histplot(data=white_data, y="Move", weights="Percentage", hue="Result", multiple="stack", alpha=1, shrink=0.5, palette=white_palette, ax=ax)
+    if selection == "Player":
+        sns.histplot(data=black_data, y="Move", weights="Percentage", hue="Result", multiple="stack", alpha=1, shrink=0.5, palette=black_palette, ax=ax)
+    ax.tick_params(colors='white', labelsize=12)
+    ax.set_xlabel('Percentage (%)', color='white', fontsize=12)
+    ax.set_ylabel('Move', color='white', fontsize=12)
+    ax.set_xlim(0, 100)
+
+    sns.despine(left=True, bottom=True)
+    fig.patch.set_alpha(0.0)
+
+    legend = ax.get_legend()
+    if legend:
+        legend.remove()
+            
+    return fig
 
 if __name__ == "__main__":
     pgn_file = open("chess_games.pgn", encoding="utf-8")

@@ -46,12 +46,12 @@ class Player:
             first_move = self.get_first_move(game, notation=1)
             if self.is_white(game):
                 if first_move in first_moves[0].keys():
-                   first_moves[0][first_move] = first_moves[0].get(first_move, 0) + 1
+                   first_moves[0][first_move] += 1
                 else:
                     first_moves[0][first_move] = 1
             else:
                 if first_move in first_moves[1].keys():
-                    first_moves[1][first_move] = first_moves[0].get(first_move, 0) + 1
+                    first_moves[1][first_move] += 1
                 else:
                     first_moves[1][first_move] = 1
         return first_moves
@@ -65,6 +65,21 @@ class Player:
             c = chess.square_file(go_square)
             first_moves[f][c] += 1
         return first_moves 
+
+    def get_opening_stats(self):
+        opening_stats = [{},{}]
+        for game in self.games:
+            first_move = self.get_first_move(game, notation=1)
+            result = self.get_result(game)
+            if self.is_white(game):
+                if first_move not in opening_stats[0]:
+                    opening_stats[0][first_move] = {"win": 0, "draw": 0, "loss": 0}
+                opening_stats[0][first_move][result] += 1
+            else:
+                if first_move not in opening_stats[1]:
+                    opening_stats[1][first_move] = {"win": 0, "draw": 0, "loss": 0}
+                opening_stats[1][first_move][result] += 1
+        return opening_stats
 
     def took(self, game, move_index):
         move = game.find_move(move_index, notation=0)
@@ -133,6 +148,14 @@ class Player:
             return black_losses
         else:
             return white_losses + black_losses
+
+    def get_result(self, game):
+        if self.won(game):
+            return "win"
+        elif self.drew(game):
+            return "draw"
+        else:
+            return "loss"
 
     def won(self, game):
         if game.get_winner() == self.username:

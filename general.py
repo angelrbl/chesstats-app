@@ -18,7 +18,7 @@ def get_first_moves(games):
     for game in games:
         first_move = game.get_first_move(notation=1)
         if first_move in first_moves.keys():
-            first_moves[first_move] = first_moves.get(first_move, 0) + 1
+            first_moves[first_move] += 1
         else:
             first_moves[first_move] = 1
     return first_moves
@@ -33,6 +33,15 @@ def get_first_moves_matrix(games):
         first_moves[f][c] += 1
     return first_moves
 
+def get_opening_stats(games):
+    opening_stats = {}
+    for game in games:
+        first_move = game.get_first_move(notation=1)
+        result = game.get_white_result()
+        if first_move not in opening_stats:
+            opening_stats[first_move] = {"win": 0, "draw": 0, "loss": 0}
+        opening_stats[first_move][result] += 1
+    return opening_stats
 
 pgn_file = open("chess_games.pgn", encoding="utf-8")
 user = "TensiKReyDama"
@@ -69,3 +78,5 @@ if __name__ == "__main__":
     print(chess_games[0].get_first_capture())
 
     print(player.took(player.get_games()[0], 17))
+
+    print(player.get_opening_stats())

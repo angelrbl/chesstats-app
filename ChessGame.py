@@ -83,6 +83,14 @@ class ChessGame:
         else:
             return move
         
+    def get_white_result(self):
+        result = self.get_color_winner()
+        if result == "white":
+            return "win"
+        elif result == "draw":
+            return "draw"
+        else:
+            return "loss"
 
     def get_game(self):
         return self.game
