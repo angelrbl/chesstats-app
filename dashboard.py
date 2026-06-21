@@ -13,13 +13,13 @@ if "pgn_file" not in st.session_state:
 if "player" not in st.session_state:
     st.session_state["player"] = Player(st.session_state["username"], st.session_state["pgn_file"])
 if "games" not in st.session_state:
-        st.session_state["games"] = general.build_games_list(st.session_state["pgn_file"])
-
-def data_from_pgn(username):
-    st.session_state["username"] = username
-    st.session_state["pgn_file"] = general.pgn_file
-    st.session_state["player"] = Player(username, general.pgn_file)
     st.session_state["games"] = general.build_games_list(st.session_state["pgn_file"])
+
+def data_from_pgn(username, pgn_file):
+    st.session_state["username"] = username
+    st.session_state["pgn_file"] = pgn_file
+    st.session_state["player"] = Player(username, pgn_file)
+    st.session_state["games"] = general.build_games_list(pgn_file)
 
 def data_from_chesscom(username, months):
     with st.spinner(f"Downloading {username} last {months} games from Chess.com... (this may take a few seconds)"):
@@ -31,6 +31,9 @@ def data_from_chesscom(username, months):
         except Exception as e:
             st.error(f"Player's data not found on Chess.com: {e}")
 
+def default_pgn_file():
+    st.session_state["pgn_file"] = general.pgn_file
+
 #Título
 st.write("# **Chesstats.**")
 st.write("##### The best data analysis engine to improve at chess")
@@ -40,9 +43,14 @@ st.write("Pick where do you want to get your data from: ")
 tab1, tab2 = st.tabs(["PGN File", "Chess.com"])
 with tab1:
     #Usuario
-    username = st.text_input(label="User", value=st.session_state["username"], placeholder="Type a username")
-    st.button("Retrieve data from PGN file", on_click=data_from_pgn, kwargs={"username": username}, width="stretch", key="pgn_button")
-    
+    pgn_file = st.session_state["pgn_file"]  
+    uploaded_file = st.file_uploader(label="PGN file", type=".pgn", max_upload_size=10, accept_multiple_files=False, on_change=default_pgn_file)
+    with st.spinner(f"Downloading games from uploaded PGN file... (this may take a few seconds)"):
+        if uploaded_file:
+            pgn_file = StringIO(uploaded_file.getvalue().decode("utf-8"))            
+    username = st.selectbox(label="User", placeholder="Type a username", options=general.get_players_list(pgn_file))
+    st.button("Retrieve data from PGN file", on_click=data_from_pgn, kwargs={"username": username, "pgn_file": pgn_file}, width="stretch", key="pgn_button")
+
 with tab2:
     col1,col2 = st.columns(2) 
     username = col1.text_input(label="User", value=st.session_state["username"], placeholder="Type a Chess.com username")

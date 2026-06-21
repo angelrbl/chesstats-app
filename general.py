@@ -2,7 +2,6 @@ import chess
 import chess.pgn
 from ChessGame import ChessGame
 import chessdotcom
-import streamlit as st
 
 chessdotcom.Client.request_config["headers"]["User-Agent"] = ("ChesstatsApp"
     "Contact me at angelramibla@gmail.com")
@@ -68,6 +67,15 @@ def get_opening_stats(games):
             opening_stats[first_move] = {"win": 0, "draw": 0, "loss": 0}
         opening_stats[first_move][result] += 1
     return opening_stats
+
+def get_players_list(pgn):
+    games = build_games_list(pgn)
+    player_list = []
+    for game in games:
+        player_list.append(game.get_white())
+        player_list.append(game.get_black())
+    player_list = set(player_list)
+    return player_list    
 
 pgn_file = open("chess_games.pgn", encoding="utf-8")
 user = "TensiKReyDama"
