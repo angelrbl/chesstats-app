@@ -1,6 +1,6 @@
 # Chesstats.
 
-Chesstats is a data analysis tool that helps you visualize and understand different aspects of your chess games. Right now, it works using PGN files, containing the information of different chess games from one or more users. The tool consists of an interactive dashboard that guides you through all the different stats of the games.
+Chesstats is a data analysis tool that helps you visualize and understand different aspects of your chess games. Right now, it works using PGN files, containing the information of different chess games from one or more users. The PGN file can be uploaded or retrived from Chess.com. The tool consists of an interactive dashboard that guides you through all the different stats of the games.
 
 ---
 
@@ -13,6 +13,7 @@ Chesstats is a data analysis tool that helps you visualize and understand differ
 
 ## 🚀 Main features
 
+- Data retrievable from PGN files or Chess.com
 - Dynamic selection of data (General view vs. Specific player)
 - First move frequency analysis
 - Performance graphs and win rate of openings (with stacked percentages)
@@ -74,9 +75,9 @@ streamlit run dashboard.py
 ├── requirements.txt
 └── README.md
 ```
+
 ---
 
 ## 🧑💻 Credits
 
-@angelrbl
-Project designed with analitic purposes and learning of data science aplied to chess.
+@angelrbl: Project designed with analitic purposes and data science learning applied to chess.

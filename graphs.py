@@ -6,7 +6,7 @@ import general as general
 from matplotlib.ticker import MaxNLocator
 import streamlit as st
 
-text_color = "white" if st.context.theme.type == "dark" else "black"
+
 if "pgn_file" not in st.session_state:
         st.session_state["pgn_file"] = general.pgn_file
 pgn_file = st.session_state["pgn_file"]
@@ -15,6 +15,9 @@ if "games" not in st.session_state:
 
 def check_text_color():
     text_color = "white" if st.context.theme.type == "dark" else "black"
+    return text_color
+
+text_color = check_text_color()
 
 def first_moves_heatmap(player, selection):
     matriz_np = np.array(player.get_first_moves_matrix() if selection == "Player" else general.get_first_moves_matrix(st.session_state["games"]))

@@ -73,4 +73,4 @@ with tab3:
     st.pyplot(graphs.results_graph(player, color="black"), transparent="True")
 
 st.bottom.link_button("Project", url="https://github.com/angelrbl/chesstats", type="secondary", icon=":material/deployed_code:")
-graphs.check_text_color()
+graphs.text_color = graphs.check_text_color()
