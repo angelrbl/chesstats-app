@@ -2,6 +2,7 @@ import chess
 import chess.pgn
 from ChessGame import ChessGame
 import chessdotcom
+from Player import Player
 
 chessdotcom.Client.request_config["headers"]["User-Agent"] = ("ChesstatsApp"
     "Contact me at angelramibla@gmail.com")
@@ -82,4 +83,6 @@ user = "TensiKReyDama"
 games = build_games_list(pgn_file)
 
 if __name__ == "__main__":
-    print(seek_chessdotcom_games("TensiKReyDama", months=3))
+    # print(seek_chessdotcom_games("TensiKReyDama", months=3))
+    player = Player(user, pgn_file)
+    print(player.get_rivals())

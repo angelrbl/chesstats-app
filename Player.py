@@ -6,6 +6,7 @@ class Player:
     def __init__(self, usr, pgn):
         self.username = usr
         self.games = self.filter_games(pgn)
+        self.rivals = self.get_rival_list(self.games)
         self.GAME_NUM = len(self.games)    
 
     def filter_games(self, pgn):
@@ -20,6 +21,16 @@ class Player:
         pgn.seek(0)
         return chess_games
     
+    def get_rival_list(self, games):
+        rival_list = []
+        for game in games:
+            if game.get_white() != self.username:
+                rival_list.append(game.get_white())
+            else:
+                 rival_list.append(game.get_black())
+        return set(rival_list)
+
+
     def get_winning_rate(self):
         if self.GAME_NUM == 0:
             return 0
@@ -177,5 +188,7 @@ class Player:
         return self.games
     def get_username(self):
         return self.username
+    def get_rivals(self):
+        return self.rivals
 
 #IDEA: COMPARAR PARTIDAS CON LAS DE UN POSIBLE RIVAL 
