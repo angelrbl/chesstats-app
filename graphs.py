@@ -64,6 +64,7 @@ def results_graph(player, color):
     ax.set_ylabel('Num of games', color=text_color, fontsize=12)
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))
     fig.patch.set_alpha(0.0)
+    ax.patch.set_alpha(0.0)
     return fig
 
 def first_move_graph(player, selection):
@@ -71,22 +72,31 @@ def first_move_graph(player, selection):
         first_move_dict = player.get_first_moves()
         if not first_move_dict:
             raise Exception("Not enough data to show")
+        white_sorted = sorted(first_move_dict[0].items(), key=lambda item: item[1], reverse=True)
+        white_moves = [move for move, _ in white_sorted]
+        white_times = [times for _, times in white_sorted]
         first_move_white_data = {
-            "Move": list(first_move_dict[0].keys()),
-            "Times": list(first_move_dict[0].values())
+            "Move": white_moves,
+            "Times": white_times
         }
+        black_sorted = sorted(first_move_dict[1].items(), key=lambda item: item[1], reverse=True)
+        black_moves = [move for move, _ in black_sorted]
+        black_times = [times for _, times in black_sorted]
         first_move_black_data = {
-            "Move": list(first_move_dict[1].keys()),
-            "Times": list(first_move_dict[1].values())
+            "Move": black_moves,
+            "Times": black_times
         }
         games_num = len(first_move_dict[0]) + len(first_move_dict[1])
     else:
         first_move_dict = general.get_first_moves(st.session_state["games"])
         if not first_move_dict:
             raise Exception("Not enough data to show")
+        white_sorted = sorted(first_move_dict.items(), key=lambda item: item[1], reverse=True)
+        white_moves = [move for move, _ in white_sorted]
+        white_times = [times for _, times in white_sorted]
         first_move_white_data = {
-            "Move": list(first_move_dict.keys()),
-            "Times": list(first_move_dict.values())
+            "Move": white_moves,
+            "Times": white_times
         }
         games_num = len(first_move_dict.keys())
 
@@ -103,6 +113,7 @@ def first_move_graph(player, selection):
     ax.get_xaxis().set_visible(False)
     sns.despine(left=True, bottom=True)
     fig.patch.set_alpha(0.0)
+    ax.patch.set_alpha(0.0)
     return fig
 
 
@@ -228,6 +239,7 @@ def opening_stats_graph(player, selection):
 
     sns.despine(left=True, bottom=True)
     fig.patch.set_alpha(0.0)
+    ax.patch.set_alpha(0.0)
 
     legend = ax.get_legend()
     if legend:
