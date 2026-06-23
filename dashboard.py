@@ -11,7 +11,7 @@ if "username" not in st.session_state:
 if "pgn_file" not in st.session_state:
         st.session_state["pgn_file"] = general.pgn_file
 if "player" not in st.session_state:
-    st.session_state["player"] = Player(st.session_state["username"], st.session_state["pgn_file"])
+    st.session_state["player"] = None
 if "games" not in st.session_state:
     st.session_state["games"] = general.build_games_list(st.session_state["pgn_file"])
 
@@ -60,25 +60,25 @@ with tab2:
 player = st.session_state["player"]
 
 st.space("medium")
+if player:
+    #ESTADISTÍCAS PARTIDAS
+    st.write(f"## ***{st.session_state["username"] if st.session_state["username"] else "User"}***, welcome.  \n##### These are some of your chess stats:")
+    col1, col2, col3 = st.columns(3)
+    col1.metric(label="Games", value=player.GAME_NUM)
+    col2.metric(label="Wins", value=player.get_win_count(color=""))
+    col3.metric(label="Winning %", value=player.get_winning_rate())
 
-#ESTADISTÍCAS PARTIDAS
-st.write(f"## ***{st.session_state["username"] if st.session_state["username"] else "User"}***, welcome.  \n##### These are some of your chess stats:")
-col1, col2, col3 = st.columns(3)
-col1.metric(label="Games", value=player.GAME_NUM)
-col2.metric(label="Wins", value=player.get_win_count(color=""))
-col3.metric(label="Winning %", value=player.get_winning_rate())
+    st.space("xsmall")
+    st.write(f"#### Performance")
+    st.space("xxsmall")
+    tab1, tab2, tab3 = st.tabs(["General", "White", "Black"])
 
-st.space("xsmall")
-st.write(f"#### Performance")
-st.space("xxsmall")
-tab1, tab2, tab3 = st.tabs(["General", "White", "Black"])
-
-with tab1:
-    st.pyplot(graphs.results_graph(player, color=""), transparent="True")
-with tab2:
-    st.pyplot(graphs.results_graph(player, color="white"), transparent="True")
-with tab3:
-    st.pyplot(graphs.results_graph(player, color="black"), transparent="True")
+    with tab1:
+        st.pyplot(graphs.results_graph(player, color=""), transparent="True")
+    with tab2:
+        st.pyplot(graphs.results_graph(player, color="white"), transparent="True")
+    with tab3:
+        st.pyplot(graphs.results_graph(player, color="black"), transparent="True")
 
 st.bottom.link_button("Project", url="https://github.com/angelrbl/chesstats", type="secondary", icon=":material/deployed_code:")
 graphs.text_color = graphs.check_text_color()
