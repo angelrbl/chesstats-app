@@ -17,7 +17,8 @@ st.space("small")
 try:
     player_to_compare = st.selectbox(label="Player", placeholder="Select a player to compare with", options=player.get_rivals(), index=None)
 except:
-    raise Exception("Error: No player selected.")
+    st.error("Error: No player selected.")
+    player_to_compare = None
 
 if player_to_compare:
     opponent = Player(player_to_compare, pgn_file)

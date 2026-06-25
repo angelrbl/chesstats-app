@@ -15,34 +15,38 @@ selection = st.segmented_control("", options=option_map.keys(), format_func=lamb
 
 try:
     st.write(f"Showing the first move stats of **{player.get_username() if player.get_username() else "User"}**" if option_map[selection] == "Player" else f"Showing general first move stats")
+    player_selected = True
 except:
-    raise Exception("Error: No player selected.")
-tab1, tab2 = st.tabs(["Graph", "Heatmap"])
+    st.error("Error: No player selected.")
+    player_selected = False
 
-with tab1:
-    st.write("#### First moves")
+if player_selected:
+    tab1, tab2 = st.tabs(["Graph", "Heatmap"])
 
-    try:
-        st.pyplot(graphs.first_move_graph(player, selection=option_map[selection]), transparent="True")
-    except:
-        st.warning("Not enough data to show first moves graph.")
-    
-    st.markdown("---")
-    st.write("#### Win rate")
-    
-    try:
-        st.pyplot(graphs.opening_stats_graph(player, selection=option_map[selection]), transparent="True")
-    except:
-        st.warning("Not enough data to show first move leading win rates.")
+    with tab1:
+        st.write("#### First moves")
 
-    with st.expander("See explanation"):
-        st.write('''
-            The chart above shows the loss-rate, draw-rate and win-rate of
-            the specified games as white/black in order from left to right.
-        ''')
+        try:
+            st.pyplot(graphs.first_move_graph(player, selection=option_map[selection]), transparent="True")
+        except:
+            st.warning("Not enough data to show first moves graph.")
+        
+        st.markdown("---")
+        st.write("#### Win rate")
+        
+        try:
+            st.pyplot(graphs.opening_stats_graph(player, selection=option_map[selection]), transparent="True")
+        except:
+            st.warning("Not enough data to show first move leading win rates.")
 
-with tab2:
-    st.pyplot(graphs.first_moves_heatmap(player, selection=option_map[selection]))
+        with st.expander("See explanation"):
+            st.write('''
+                The chart above shows the loss-rate, draw-rate and win-rate of
+                the specified games as white/black in order from left to right.
+            ''')
+
+    with tab2:
+        st.pyplot(graphs.first_moves_heatmap(player, selection=option_map[selection]))
 
 st.bottom.link_button("Project", url="https://github.com/angelrbl/chesstats", type="secondary", icon=":material/deployed_code:")
 graphs.text_color = graphs.check_text_color()
